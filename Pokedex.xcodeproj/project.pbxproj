@@ -14,6 +14,7 @@
 		83466E7E2A6F10A5003724EC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 83466E7D2A6F10A5003724EC /* Assets.xcassets */; };
 		83466E812A6F10A5003724EC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 83466E7F2A6F10A5003724EC /* LaunchScreen.storyboard */; };
 		83C975D22A719FE6007E5F56 /* PokemonData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C975D12A719FE6007E5F56 /* PokemonData.swift */; };
+		83C975D62A71CBEF007E5F56 /* CardPokemonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C975D52A71CBEF007E5F56 /* CardPokemonView.swift */; };
 		83CB97DB2A7065A600016163 /* PokemonControler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CB97DA2A7065A600016163 /* PokemonControler.swift */; };
 /* End PBXBuildFile section */
 
@@ -27,6 +28,7 @@
 		83466E802A6F10A5003724EC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		83466E822A6F10A5003724EC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		83C975D12A719FE6007E5F56 /* PokemonData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonData.swift; sourceTree = "<group>"; };
+		83C975D52A71CBEF007E5F56 /* CardPokemonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardPokemonView.swift; sourceTree = "<group>"; };
 		83CB97DA2A7065A600016163 /* PokemonControler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonControler.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -69,6 +71,7 @@
 				83466E7F2A6F10A5003724EC /* LaunchScreen.storyboard */,
 				83466E822A6F10A5003724EC /* Info.plist */,
 				83C975D12A719FE6007E5F56 /* PokemonData.swift */,
+				83C975D52A71CBEF007E5F56 /* CardPokemonView.swift */,
 			);
 			path = Pokedex;
 			sourceTree = "<group>";
@@ -146,6 +149,7 @@
 			files = (
 				83466E792A6F10A4003724EC /* ViewController.swift in Sources */,
 				83466E752A6F10A4003724EC /* AppDelegate.swift in Sources */,
+				83C975D62A71CBEF007E5F56 /* CardPokemonView.swift in Sources */,
 				83466E772A6F10A4003724EC /* SceneDelegate.swift in Sources */,
 				83CB97DB2A7065A600016163 /* PokemonControler.swift in Sources */,
 				83C975D22A719FE6007E5F56 /* PokemonData.swift in Sources */,

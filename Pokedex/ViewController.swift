@@ -9,8 +9,19 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    
+    func printPokemonDetails(_ pokemon: Pokemon) {
+        print("Primeira tela")
+        print("Nome do Pokémon: \(pokemon.name)")
+        print("Bio do Pokémon: \(pokemon.bio)")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        for pokemon in pokemonList {
+            printPokemonDetails(pokemon)
+        }
     }
     
     @IBAction func goToPokemon(_ sender: UIButton) {

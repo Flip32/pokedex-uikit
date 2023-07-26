@@ -11,7 +11,7 @@ class PokemonController: UIViewController {
     @IBOutlet weak var imgPokemon: UIImageView!
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("Chegou na Pokemon controller \(pokemonId)")
+        print("Chegou na Pokemon controller \(pokemonId!)")
         
         if let id = pokemonId {
                     pokemon = pokemonList.first { $0.id == id }

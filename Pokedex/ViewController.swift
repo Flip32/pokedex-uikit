@@ -2,23 +2,57 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    var previousCardView: CardPokemonView?
+    //    var scrollView: UIScrollView!
+    //    var previousCardView: CardPokemonView?
+    var cardViews: [CardPokemonView] = []
     
     @IBOutlet weak var logo: UIImageView!
     
+    private let scrollView: UIScrollView = {
+        let scroll = UIScrollView()
+        scroll.translatesAutoresizingMaskIntoConstraints = false
+        scroll.backgroundColor = .clear
+        return scroll
+    }()
     
-    func printPokemonDetails(_ pokemon: Pokemon) {
-        print("Primeira tela")
-        print("Nome do Pokémon: \(pokemon.name)")
-        print("Bio do Pokémon: \(pokemon.bio)")
-    }
+    private let contentView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.backgroundColor = .clear
+        stackView.spacing = 10
+        stackView.axis = .vertical
+        stackView.alignment = .fill
+        stackView.distribution = .fillProportionally
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        
+        
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: logo.bottomAnchor, constant: 16),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
+        ])
+        
+        NSLayoutConstraint.activate([
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+        ])
         
         for pokemon in pokemonList {
-            printPokemonDetails(pokemon)
             createCardView(for: pokemon)
+        }
+        
+        if let lastCardView = cardViews.last {
+            contentView.bottomAnchor.constraint(equalTo: lastCardView.bottomAnchor, constant: 16).isActive = true
         }
     }
     
@@ -28,6 +62,7 @@ class ViewController: UIViewController {
     //        self.performSegue(withIdentifier: "goToPokemonController", sender: pokemonId)
     //
     //    }
+    
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "goToPokemonController" {
@@ -43,29 +78,23 @@ class ViewController: UIViewController {
         let cardView = CardPokemonView() // Crie uma nova instância da CardPokemonView
         cardView.translatesAutoresizingMaskIntoConstraints = false
         
-        view.addSubview(cardView)
+        contentView.addSubview(cardView)
         cardView.backgroundColor = .clear
         
         // Constraints
+        //        NSLayoutConstraint.activate([
+        //            cardView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+        //
+        //        ])
         NSLayoutConstraint.activate([
-            cardView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-            
+            cardView.topAnchor.constraint(equalTo: cardViews.last?.bottomAnchor ?? contentView.topAnchor, constant: 16),
+            cardView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            //                    cardView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            cardView.heightAnchor.constraint(equalToConstant: 250), // Altura fixa para a cardView (ajuste conforme necessário)
         ])
         
-        if let previousCardView = previousCardView {
-            NSLayoutConstraint.activate([
-                cardView.topAnchor.constraint(equalTo: previousCardView.bottomAnchor, constant: 16)
-            ])
-        } else {
-            // Primeiro Card
-            NSLayoutConstraint.activate([
-                cardView.topAnchor.constraint(equalTo: logo.bottomAnchor, constant: 24)
-            ])
-        }
-        
-        previousCardView = cardView
+        cardViews.append(cardView)
         cardView.pokemon = pokemon
     }
-    
     
 }

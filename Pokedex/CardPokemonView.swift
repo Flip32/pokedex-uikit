@@ -17,7 +17,7 @@ class CardPokemonView: UIView {
     private let buttonView: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = .clear // Defina a cor de fundo como transparente
+        button.backgroundColor = .red // Defina a cor de fundo como transparente
         button.isEnabled = true // Tornar o botão clicável
         return button
     }()
@@ -50,6 +50,13 @@ class CardPokemonView: UIView {
         return stackView
     }()
     
+    private let contentStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -63,18 +70,25 @@ class CardPokemonView: UIView {
     
     private func initIU() {
         // Adicionar as subviews à cardView
-        addSubview(imageView)
+        //        addSubview(imageView)
+        contentStackView.addArrangedSubview(imageView)
         infoStackView.addArrangedSubview(nameLabel)
         infoStackView.addArrangedSubview(idLabel)
-        addSubview(infoStackView)
+        contentStackView.addArrangedSubview(infoStackView)
+        //        addSubview(infoStackView)
+        addSubview(contentStackView)
         addSubview(buttonView)
         
         // Adicionar as constraints para posicionar os elementos dentro da cardView
         NSLayoutConstraint.activate([
-            imageView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
-            imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            imageView.widthAnchor.constraint(equalToConstant: 100),
-            imageView.heightAnchor.constraint(equalToConstant: 100),
+            contentStackView.topAnchor.constraint(equalTo: topAnchor),
+            contentStackView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            //            contentStackView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            
+            //            imageView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
+            //            imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            imageView.widthAnchor.constraint(equalToConstant: 200),
+            imageView.heightAnchor.constraint(equalToConstant: 200),
             
             //            nameLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
             //            nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
@@ -82,22 +96,20 @@ class CardPokemonView: UIView {
             //            idLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
             //            idLabel.leadingAnchor.constraint(equalTo: nameLabel.trailingAnchor, constant: 8),
             
-            buttonView.topAnchor.constraint(equalTo: topAnchor),
-            buttonView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            buttonView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            buttonView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            buttonView.topAnchor.constraint(equalTo: self.topAnchor),
+            buttonView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            buttonView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            buttonView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             
-            infoStackView.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 10),
+            infoStackView.topAnchor.constraint(equalTo: contentStackView.bottomAnchor),
             infoStackView.leadingAnchor.constraint(equalTo: self.centerXAnchor),
-            infoStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -16)
-        ])
-        
-        // Adicionar outras constraints conforme necessário para posicionar os elementos corretamente
-        
-        // Exemplo: Constraints para ajustar o conteúdo à direita da cardView
-        NSLayoutConstraint.activate([
-            trailingAnchor.constraint(equalTo: nameLabel.trailingAnchor, constant: 16),
-            bottomAnchor.constraint(equalTo: idLabel.bottomAnchor, constant: 16)
+            infoStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor),
+            
+            //            nameLabel.topAnchor.constraint(equalTo: infoStackView.topAnchor),
+            //            nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5),
+            
+            //            idLabel.topAnchor.constraint(equalTo: nameLabel.topAnchor, constant: 2),
+            //            idLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5),
         ])
         
         buttonView.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
@@ -120,13 +132,13 @@ class CardPokemonView: UIView {
     }
     
     private func findParentViewController() -> UIViewController? {
-            var parentResponder: UIResponder? = self
-            while parentResponder != nil {
-                parentResponder = parentResponder?.next
-                if let viewController = parentResponder as? UIViewController {
-                    return viewController
-                }
+        var parentResponder: UIResponder? = self
+        while parentResponder != nil {
+            parentResponder = parentResponder?.next
+            if let viewController = parentResponder as? UIViewController {
+                return viewController
             }
-            return nil
         }
+        return nil
+    }
 }

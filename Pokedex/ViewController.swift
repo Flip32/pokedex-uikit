@@ -41,18 +41,14 @@ class ViewController: UIViewController {
     
     func createCardView(for pokemon: Pokemon) {
         let cardView = CardPokemonView() // Crie uma nova instância da CardPokemonView
-        cardView.translatesAutoresizingMaskIntoConstraints = false // Desative a criação automática de constraints
+        cardView.translatesAutoresizingMaskIntoConstraints = false
         
-        // Adicione a nova cardView à ViewController
         view.addSubview(cardView)
-        cardView.backgroundColor = .blue
+        cardView.backgroundColor = .clear
         
         // Constraints
         NSLayoutConstraint.activate([
-            //                cardView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-            //                cardView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
             cardView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-            //            cardView.topAnchor.constraint(equalTo: logo.bottomAnchor, constant: 24)
             
         ])
         

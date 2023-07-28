@@ -17,7 +17,7 @@ class CardPokemonView: UIView {
     private let buttonView: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = .red // Defina a cor de fundo como transparente
+        button.backgroundColor = .clear // Defina a cor de fundo como transparente
         button.isEnabled = true // Tornar o botão clicável
         return button
     }()
@@ -31,21 +31,25 @@ class CardPokemonView: UIView {
     
     private let nameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.font = UIFont.boldSystemFont(ofSize: 16)
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = .white
         return label
     }()
     
     private let idLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
+        label.font = UIFont.boldSystemFont(ofSize: 18)
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = .darkGray
         return label
     }()
     
     private let infoStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
+        stackView.backgroundColor = .clear
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
@@ -72,8 +76,8 @@ class CardPokemonView: UIView {
         // Adicionar as subviews à cardView
         //        addSubview(imageView)
         contentStackView.addArrangedSubview(imageView)
-        infoStackView.addArrangedSubview(nameLabel)
         infoStackView.addArrangedSubview(idLabel)
+        infoStackView.addArrangedSubview(nameLabel)
         contentStackView.addArrangedSubview(infoStackView)
         //        addSubview(infoStackView)
         addSubview(contentStackView)
@@ -81,35 +85,14 @@ class CardPokemonView: UIView {
         
         // Adicionar as constraints para posicionar os elementos dentro da cardView
         NSLayoutConstraint.activate([
-            contentStackView.topAnchor.constraint(equalTo: topAnchor),
-            contentStackView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            //            contentStackView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            
-            //            imageView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
-            //            imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            imageView.widthAnchor.constraint(equalToConstant: 200),
-            imageView.heightAnchor.constraint(equalToConstant: 200),
-            
-            //            nameLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
-            //            nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            
-            //            idLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
-            //            idLabel.leadingAnchor.constraint(equalTo: nameLabel.trailingAnchor, constant: 8),
+            widthAnchor.constraint(equalToConstant: 200),
+            heightAnchor.constraint(equalToConstant: 250),
             
             buttonView.topAnchor.constraint(equalTo: self.topAnchor),
             buttonView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             buttonView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            buttonView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            buttonView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
             
-            infoStackView.topAnchor.constraint(equalTo: contentStackView.bottomAnchor),
-            infoStackView.leadingAnchor.constraint(equalTo: self.centerXAnchor),
-            infoStackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor),
-            
-            //            nameLabel.topAnchor.constraint(equalTo: infoStackView.topAnchor),
-            //            nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5),
-            
-            //            idLabel.topAnchor.constraint(equalTo: nameLabel.topAnchor, constant: 2),
-            //            idLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5),
         ])
         
         buttonView.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)

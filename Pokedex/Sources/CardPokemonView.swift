@@ -26,6 +26,8 @@ class CardPokemonView: UIView {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.layer.cornerRadius = 10
+        imageView.clipsToBounds = true
         return imageView
     }()
     
@@ -110,8 +112,12 @@ class CardPokemonView: UIView {
     
     @objc private func buttonTapped() {
         print("CardPokemonView foi clicado!")
-        let parentViewController = findParentViewController()
-        parentViewController?.performSegue(withIdentifier: "goToPokemonController", sender: pokemon?.id)
+        let pokemonController = PokemonController()
+        pokemonController.pokemonId = pokemon?.id
+        
+        if let homeViewController = findParentViewController() as? HomeViewController {
+                homeViewController.navigationController?.pushViewController(pokemonController, animated: true)
+            }
     }
     
     private func findParentViewController() -> UIViewController? {

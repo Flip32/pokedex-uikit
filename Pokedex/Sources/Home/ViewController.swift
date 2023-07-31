@@ -6,7 +6,12 @@ class ViewController: UIViewController {
     //    var previousCardView: CardPokemonView?
     var cardViews: [CardPokemonView] = []
     
-    @IBOutlet weak var logo: UIImageView!
+    private let logo: UIImageView = {
+        let image = UIImageView()
+        image.image = UIImage(named: "Logo")
+        image.translatesAutoresizingMaskIntoConstraints = false
+        return image
+    }()
     
     private let scrollView: UIScrollView = {
         let scroll = UIScrollView()
@@ -28,8 +33,14 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.addSubview(logo)
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
+        
+        NSLayoutConstraint.activate([
+            logo.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            logo.topAnchor.constraint(equalTo: view.topAnchor, constant: 10)
+        ])
         
         
         NSLayoutConstraint.activate([

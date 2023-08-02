@@ -44,11 +44,11 @@ class PokemonView: UIView {
             if let pokemon = pokemon {
                 print(pokemon.name)
                 name.text = pokemon.name
-                img.image = pokemon.image
+//                img.image = pokemon.image
                 bioDescription.text = pokemon.bioDescription
                 
                 addSubview(name)
-                addSubview(img)
+//                addSubview(img)
                 addSubview(bioDescription)
                 addMyConstraints()
             }

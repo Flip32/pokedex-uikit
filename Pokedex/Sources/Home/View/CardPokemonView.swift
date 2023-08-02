@@ -1,4 +1,5 @@
 import UIKit
+import SDWebImage
 
 
 class CardPokemonView: UIView {
@@ -6,10 +7,11 @@ class CardPokemonView: UIView {
     var pokemon: Pokemon? {
         didSet {
             if let pokemon = pokemon {
-                imageView.image = pokemon.image
-                nameLabel.text = pokemon.name
-                idLabel.text = "00\(pokemon.id)"
-                // Adicionar o resto das subViews
+//                imageView.image = pokemon.image
+//                nameLabel.text = pokemon.name
+//                idLabel.text = "00\(pokemon.id)"
+
+                configure(with: pokemon)
             }
         }
     }
@@ -77,6 +79,11 @@ class CardPokemonView: UIView {
     private func initIU() {
         // Adicionar as subviews à cardView
         //        addSubview(imageView)
+        NSLayoutConstraint.activate([
+            imageView.heightAnchor.constraint(equalToConstant: 250),
+            imageView.widthAnchor.constraint(equalToConstant: 250)
+        ])
+
         contentStackView.addArrangedSubview(imageView)
         infoStackView.addArrangedSubview(idLabel)
         infoStackView.addArrangedSubview(nameLabel)
@@ -103,14 +110,18 @@ class CardPokemonView: UIView {
     
     // Configurar os dados do Pokémon na cardView
     func configure(with pokemon: Pokemon) {
-        imageView.image = pokemon.image
+        if let imageUrl = URL(string: pokemon.image) {
+            print("pokemon.image")
+            print(pokemon.image)
+            imageView.sd_setImage(with: imageUrl, placeholderImage: UIImage(named: "placeholderImage"))
+        }
         nameLabel.text = pokemon.name
-        idLabel.text = "ID: \(pokemon.id)"
-        
-        // Configure outras subviews conforme necessário com os dados do Pokémon
+        idLabel.text = "00\(pokemon.id)"
+
     }
     
     @objc private func buttonTapped() {
+        return // TODO - retirar assim q ajustar a navegação
         print("CardPokemonView foi clicado!")
         let pokemonController = PokemonController()
         pokemonController.pokemonId = pokemon?.id

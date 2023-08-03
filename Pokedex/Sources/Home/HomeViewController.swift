@@ -65,7 +65,7 @@ class HomeViewController: UIViewController {
                     case let .failure(error):
                         print(error)
                     case let .success(data):
-                        let newPokemon = Pokemon(id: data.id, name: data.name, bioDescription: "teste descricao", image: data.sprites.other?.home?.frontDefault ?? imageNotFound, weight: data.weight, height: data.height, types: data.types, sprites: data.sprites)
+                        let newPokemon = Pokemon(id: data.id, name: data.name, bioDescription: "teste descricao", image: data.sprites.other?.home?.frontDefault ?? imageNotFound, weight: data.weight, height: data.height, types: data.types, sprites: data.sprites, abilities: data.abilities)
                         newPokemonList.append(newPokemon)
                         print("Successfully fetched data for Pokemon with ID: \(data.id)")
                     }

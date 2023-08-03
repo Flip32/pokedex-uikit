@@ -1,5 +1,15 @@
 import Foundation
 
+struct AbilityData: Codable {
+    let name: String
+    let url: String
+}
+
+struct Ability: Codable {
+    let ability: AbilityData
+    let is_hidden: Bool?
+}
+
 struct Home: Codable {
     let frontDefault: String?
 
@@ -53,6 +63,7 @@ struct PokemonInitial: Codable {
     let sprites: Sprite
     let types: [TypeSlot]
     let imgDefault: String?
+    let abilities: [Ability]
 }
 
 enum ServiceError: Error {

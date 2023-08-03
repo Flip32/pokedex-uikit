@@ -9,7 +9,7 @@ struct Pokemon {
     let height: Int
     let types: [TypeSlot]
     let sprites: Sprite
-
+    let abilities: [Ability]
 
 }
 

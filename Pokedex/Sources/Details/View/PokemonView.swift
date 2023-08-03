@@ -26,8 +26,8 @@ class PokemonView: UIView {
         n.translatesAutoresizingMaskIntoConstraints = false
         n.textColor = .darkGray
         n.numberOfLines = 1
-        n.font = UIFont.boldSystemFont(ofSize: 18)
-        n.font = UIFont.systemFont(ofSize: 20)
+        n.font = UIFont.boldSystemFont(ofSize: 20)
+        n.font = UIFont.systemFont(ofSize: 32)
         n.textAlignment = .center
         return n
     }()
@@ -70,6 +70,8 @@ class PokemonView: UIView {
 
     private var labelForTypes: UILabel = {
         let l = UILabel()
+        l.font = UIFont.systemFont(ofSize: 20)
+        l.font = UIFont.boldSystemFont(ofSize: 18)
         l.translatesAutoresizingMaskIntoConstraints = false
         l.textColor = .darkGray
         return l
@@ -82,6 +84,26 @@ class PokemonView: UIView {
         v.distribution = .fillProportionally
         v.spacing = 10
         return v
+    }()
+
+    private var abilityView: UIStackView = {
+        let v = UIStackView()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.axis = .vertical
+        v.distribution = .fillProportionally
+        v.spacing = 5
+        return v
+    }()
+
+    private var abilityLabel: UILabel = {
+        let l = UILabel()
+        l.translatesAutoresizingMaskIntoConstraints = false
+        l.textColor = .darkGray
+        l.text = "Abilities"
+        l.font = UIFont.systemFont(ofSize: 20)
+        l.font = UIFont.boldSystemFont(ofSize: 18)
+        l.textAlignment = .left
+        return l
     }()
 
     init(pokemonId: Int?) {
@@ -123,6 +145,24 @@ class PokemonView: UIView {
                 }
                 addSubview(typesContainer)
 
+                // Create abilities
+                abilityLabel.text = "Abilities: "
+                addSubview(abilityLabel)
+
+                let abilities = pokemon.abilities
+                abilities.forEach { a in
+                    print("ability: ", a.ability.name)
+                    let l = UILabel()
+                    l.translatesAutoresizingMaskIntoConstraints = false
+                    l.textColor = .darkGray
+                    l.text = "Abilities"
+                    l.font = UIFont.boldSystemFont(ofSize: 18)
+                    l.textAlignment = .left
+                    l.text = a.ability.name.capitalized
+                    abilityView.addArrangedSubview(l)
+                }
+
+                addSubview(abilityView)
                 addMyConstraints()
             }
         }
@@ -155,8 +195,7 @@ class PokemonView: UIView {
         NSLayoutConstraint.activate([
             cardInfo.centerXAnchor.constraint(equalTo: centerXAnchor),
             cardInfo.topAnchor.constraint(equalTo: img.bottomAnchor, constant: 20),
-            cardInfo.widthAnchor.constraint(equalToConstant: 250), // Como faço para deixar a altura automática?
-//            cardInfo.heightAnchor.constraint(equalToConstant: 100)
+            cardInfo.widthAnchor.constraint(equalToConstant: 250),
             cardInfo.heightAnchor.constraint(greaterThanOrEqualToConstant: 0)
         ])
 
@@ -165,6 +204,20 @@ class PokemonView: UIView {
             typesContainer.topAnchor.constraint(equalTo: cardInfo.bottomAnchor, constant: 20),
             typesContainer.widthAnchor.constraint(equalToConstant: 250),
             typesContainer.heightAnchor.constraint(greaterThanOrEqualToConstant: 0)
+        ])
+
+        NSLayoutConstraint.activate([
+            abilityLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+            abilityLabel.topAnchor.constraint(equalTo: typesContainer.bottomAnchor, constant: 20),
+            abilityLabel.widthAnchor.constraint(equalToConstant: 250),
+        ])
+
+        NSLayoutConstraint.activate([
+//            abilityView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            abilityView.topAnchor.constraint(equalTo: abilityLabel.bottomAnchor, constant: 2),
+            abilityView.widthAnchor.constraint(equalToConstant: 250),
+            abilityView.heightAnchor.constraint(greaterThanOrEqualToConstant: 0),
+            abilityView.leadingAnchor.constraint(equalTo: abilityLabel.leadingAnchor, constant: 20),
         ])
     }
 

@@ -19,6 +19,7 @@
 		83C975D22A719FE6007E5F56 /* PokemonData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C975D12A719FE6007E5F56 /* PokemonData.swift */; };
 		83C975D62A71CBEF007E5F56 /* CardPokemonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83C975D52A71CBEF007E5F56 /* CardPokemonView.swift */; };
 		83CB97DB2A7065A600016163 /* PokemonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CB97DA2A7065A600016163 /* PokemonViewController.swift */; };
+		D2033CAA1CB4FFE7621EF804 /* TypeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2033991BDEADCE8C6FA601A /* TypeCard.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 		83C975D12A719FE6007E5F56 /* PokemonData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonData.swift; sourceTree = "<group>"; };
 		83C975D52A71CBEF007E5F56 /* CardPokemonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardPokemonView.swift; sourceTree = "<group>"; };
 		83CB97DA2A7065A600016163 /* PokemonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonViewController.swift; sourceTree = "<group>"; };
+		D2033991BDEADCE8C6FA601A /* TypeCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypeCard.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +109,7 @@
 			isa = PBXGroup;
 			children = (
 				839234B72A7871A000D806DE /* PokemonView.swift */,
+				D2033991BDEADCE8C6FA601A /* TypeCard.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -233,6 +236,7 @@
 				83242EEA2A785F5C00E86A03 /* HomeView.swift in Sources */,
 				83242EE82A785C1100E86A03 /* HomeViewController.swift in Sources */,
 				83C975D22A719FE6007E5F56 /* PokemonData.swift in Sources */,
+				D2033CAA1CB4FFE7621EF804 /* TypeCard.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

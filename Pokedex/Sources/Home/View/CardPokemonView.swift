@@ -116,13 +116,12 @@ class CardPokemonView: UIView {
         if let imageUrl = URL(string: pokemon.image) {
             imageView.sd_setImage(with: imageUrl, placeholderImage: UIImage(named: "placeholderImage"))
         }
-        nameLabel.text = pokemon.name
+        nameLabel.text = pokemon.name.capitalized
         idLabel.text = String(format: "%03d", pokemon.id)
 
     }
     
     @objc private func buttonTapped() {
-        return // TODO - retirar assim q ajustar a navegação
         print("CardPokemonView foi clicado!")
         let pokemonController = PokemonController()
         pokemonController.pokemonId = pokemon?.id

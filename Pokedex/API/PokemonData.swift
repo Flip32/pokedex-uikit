@@ -5,6 +5,12 @@ struct Pokemon {
     let name: String
     let bioDescription: String
     let image: String
+    let weight: Int
+    let height: Int
+    let types: [TypeSlot]
+    let sprites: Sprite
+
+
 }
 
 /* var pokemonList = [
@@ -14,3 +20,4 @@ struct Pokemon {
 ] */
 
 var pokemonList: [Pokemon] = []
+var imageNotFound = "https://cdn.neemo.com.br/uploads/settings_webdelivery/logo/3136/image-not-found.jpg"

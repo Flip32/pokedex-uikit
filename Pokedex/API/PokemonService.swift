@@ -37,7 +37,6 @@ struct Sprite: Codable {
 }
 
 struct TypeSlot: Codable {
-    let slot: Int
     let type: TypeData
 }
 

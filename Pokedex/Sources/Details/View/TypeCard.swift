@@ -93,8 +93,6 @@ class TypeCardView: UIView {
         backgroundColor = findColor(type: type)
         layer.cornerRadius = 4
         layer.cornerCurve = .continuous
-
-        // Configurar cor de acordo com o tipo
     }
 
 

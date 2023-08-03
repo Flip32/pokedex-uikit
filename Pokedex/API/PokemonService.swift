@@ -67,7 +67,9 @@ class PokemonService {
 
     // Recupera os dados iniciais para criar a lista de pokemons
     func getPokemonInfo(id: Int, callback: @escaping (Result<PokemonInitial, ServiceError>) -> Void) {
+        print("no get porkemon id", id)
         let path = "/pokemon/\(id)"
+        print("path", path)
 
         guard let url = URL(string: baseURL + path) else {
             callback(.failure(.invalidURL))

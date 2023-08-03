@@ -64,8 +64,7 @@ class CardPokemonView: UIView {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
-    
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         initIU()
@@ -80,8 +79,8 @@ class CardPokemonView: UIView {
         // Adicionar as subviews à cardView
         //        addSubview(imageView)
         NSLayoutConstraint.activate([
-            imageView.heightAnchor.constraint(equalToConstant: 250),
-            imageView.widthAnchor.constraint(equalToConstant: 250)
+            imageView.heightAnchor.constraint(equalToConstant: 200),
+            imageView.widthAnchor.constraint(equalToConstant: 200),
         ])
 
         contentStackView.addArrangedSubview(imageView)
@@ -96,6 +95,8 @@ class CardPokemonView: UIView {
         NSLayoutConstraint.activate([
             widthAnchor.constraint(equalToConstant: 200),
             heightAnchor.constraint(equalToConstant: 250),
+
+            imageView.centerXAnchor.constraint(equalTo: contentStackView.centerXAnchor),
             
             buttonView.topAnchor.constraint(equalTo: self.topAnchor),
             buttonView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
@@ -110,13 +111,13 @@ class CardPokemonView: UIView {
     
     // Configurar os dados do Pokémon na cardView
     func configure(with pokemon: Pokemon) {
+//        backgroundColor = .darkGray
+
         if let imageUrl = URL(string: pokemon.image) {
-            print("pokemon.image")
-            print(pokemon.image)
             imageView.sd_setImage(with: imageUrl, placeholderImage: UIImage(named: "placeholderImage"))
         }
         nameLabel.text = pokemon.name
-        idLabel.text = "00\(pokemon.id)"
+        idLabel.text = String(format: "%03d", pokemon.id)
 
     }
     

@@ -19,8 +19,8 @@ class CardPokemonView: UIView {
     private let buttonView: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = .clear // Defina a cor de fundo como transparente
-        button.isEnabled = true // Tornar o botão clicável
+        button.backgroundColor = .clear
+        button.isEnabled = true
         return button
     }()
     

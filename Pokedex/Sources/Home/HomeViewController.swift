@@ -1,6 +1,10 @@
 import UIKit
 
-class HomeViewController: UIViewController {
+protocol HomeViewDelegate: AnyObject {
+    func menuButtonTapped()
+}
+
+class HomeViewController: UIViewController, HomeViewDelegate {
     private var customView: HomeView? = nil
     private var loadingIndicator: UIActivityIndicatorView?
 
@@ -33,6 +37,7 @@ class HomeViewController: UIViewController {
     private func buildView() {
         view = HomeView()
         customView = view as? HomeView
+        customView?.delegate = self
     }
 
     private func showLoadingIndicator() {
@@ -93,6 +98,10 @@ class HomeViewController: UIViewController {
                 destinationVC.pokemonId = pokemonId
             }
         }
+    }
+
+    func menuButtonTapped() {
+        print("menu button tapped na controller")
     }
 
 }

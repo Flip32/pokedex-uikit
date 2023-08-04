@@ -62,7 +62,7 @@ class HomeViewController: UIViewController, HomeViewDelegate {
         let dispatchGroup = DispatchGroup()
         var newPokemonList: [Pokemon] = []
 
-        for id in 1...150 {
+        for id in 1...200 {
             dispatchGroup.enter()
             service.getPokemonInfo(id: id) { result in
                 DispatchQueue.main.async {
@@ -75,7 +75,7 @@ class HomeViewController: UIViewController, HomeViewDelegate {
                         print("Successfully fetched data for Pokemon with ID: \(data.id)")
                     }
                     // pokemon list recebe newPokemonList ordenado por id
-                    pokemonList = newPokemonList.sorted(by: { $0.id < $1.id })
+                    pokemonList = newPokemonList.sorted(by: { $0.id > $1.id })
                     dispatchGroup.leave()
                 }
             }

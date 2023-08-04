@@ -4,40 +4,43 @@ protocol HomeViewDelegate: AnyObject {
     func menuButtonTapped()
 }
 
-class HomeViewController: UIViewController, HomeViewDelegate {
-    private var customView: HomeView? = nil
+class HomeViewController: UIViewController {
+    private var customView: UIView? = nil
+    private var tableView: PokemonTableView? = nil
+//    private var scrollview: HomeView? = nil
     private var loadingIndicator: UIActivityIndicatorView?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         fetchPokemonDataInRange()
-
-/*        do {
-            let service = PokemonService()
-            service.getPokemonInfo(id: 1) { result in
-                DispatchQueue.main.async {
-                    switch result {
-                    case let .failure(error):
-                        print(error)
-                    case let .success(data):
-                        print("caiu aqui no success")
-//                        print(data.id)front_default
-                            
-                            let newPokemon = Pokemon(id: data.id, name: data.name, bioDescription: "teste descricao", image: data.sprites.other?.home?.frontDefault ?? "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png")
-                        self.newPokemonList.append(newPokemon)
-                        pokemonList = self.newPokemonList
-                        print("Chegou no fim")
-                        self.buildView()
-                    }
-                }
-            }
-        }*/
     }
 
     private func buildView() {
-        view = HomeView()
-        customView = view as? HomeView
-        customView?.delegate = self
+        customView = UIView(frame: view.bounds)
+        guard let customView = customView else { return }
+
+        tableView = PokemonTableView(frame: customView.bounds, style: .plain)
+        guard let tableView = tableView else { return }
+        print("passou do table view guard let")
+
+        tableView.delegate = tableView
+        tableView.dataSource = tableView
+
+        tableView.register(PokemonTableViewCell.self, forCellReuseIdentifier: PokemonTableViewCell.reuseIdentifier)
+
+        customView.addSubview(tableView)
+        view.addSubview(customView)
+
+        view.backgroundColor = UIColor.systemPink
+
+        /*NSLayoutConstraint.activate([
+            customView.topAnchor.constraint(equalTo: view.topAnchor),
+            customView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            customView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            customView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])*/
+
+        tableView.reloadData()
     }
 
     private func showLoadingIndicator() {
@@ -62,7 +65,7 @@ class HomeViewController: UIViewController, HomeViewDelegate {
         let dispatchGroup = DispatchGroup()
         var newPokemonList: [Pokemon] = []
 
-        for id in 1...200 {
+        for id in 1...2 {
             dispatchGroup.enter()
             service.getPokemonInfo(id: id) { result in
                 DispatchQueue.main.async {
@@ -83,14 +86,13 @@ class HomeViewController: UIViewController, HomeViewDelegate {
 
         dispatchGroup.notify(queue: .main) {
             print("chegou no fim")
+            print("pokemon list", pokemonList[0])
             self.buildView()
             self.hideLoadingIndicator()
         }
     }
 
-
     // MARK: - Navigation
-
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "goToPokemonController" {
             if let destinationVC = segue.destination as? PokemonController,

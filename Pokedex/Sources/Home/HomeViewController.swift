@@ -75,28 +75,33 @@ class HomeViewController: UIViewController {
         print("vai chamar a api")
         showLoadingIndicator()
         let service = PokemonService()
+        let dispatchGroup = DispatchGroup()
+        var newPokemonList: [Pokemon] = []
 
-        for id in 1...2 {
-            service.getPokemonInfo(id: id) { [weak self] result in
-                switch result {
-                case let .failure(error):
-                    print(error)
-                    DispatchQueue.main.async {
-                        self?.hideLoadingIndicator()
+        for id in 1...150 {
+            dispatchGroup.enter()
+            service.getPokemonInfo(id: id) { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case let .failure(error):
+                        print(error)
+                    case let .success(data):
+                        let newPokemon = Pokemon(id: data.id, name: data.name, bioDescription: "teste descricao", image: data.sprites.other?.home?.frontDefault ?? imageNotFound, weight: data.weight, height: data.height, types: data.types, sprites: data.sprites, abilities: data.abilities)
+                        newPokemonList.append(newPokemon)
+                        print("Successfully fetched data for Pokemon with ID: \(data.id)")
                     }
-                case let .success(data):
-                    let newPokemon = Pokemon(id: data.id, name: data.name, bioDescription: "teste descricao", image: data.sprites.other?.home?.frontDefault ?? imageNotFound, weight: data.weight, height: data.height, types: data.types, sprites: data.sprites, abilities: data.abilities)
-                    pokemonList.append(newPokemon)
-                    print("Successfully fetched data for Pokemon with ID: \(data.id)")
-
-                    DispatchQueue.main.async {
-                        // pokemon list recebe newPokemonList ordenado por id
-//                        pokemonList = newPokemonList.sorted(by: { $0.id > $1.id })
-                        self?.hideLoadingIndicator()
-                        self?.tableView.reloadData()
-                    }
+                    // pokemon list recebe newPokemonList ordenado por id
+                    pokemonList = newPokemonList.sorted(by: { $0.id > $1.id })
+                    dispatchGroup.leave()
                 }
             }
+        }
+
+        dispatchGroup.notify(queue: .main) { [weak self] in
+            print("chegou no fim")
+            print("pokemon list", pokemonList[0])
+            self?.hideLoadingIndicator()
+            self?.tableView.reloadData()
         }
     }
 

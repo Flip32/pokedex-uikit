@@ -4,6 +4,7 @@ import UIKit
 class HomeViewController: UIViewController {
     var cardViews: [CardPokemonView] = []
     var screenShown: String = "ScrollView"
+    var sortedList: String = "up"
 
     private let logo: UIImageView = {
         let image = UIImageView()
@@ -13,6 +14,14 @@ class HomeViewController: UIViewController {
     }()
 
     private let menuButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = .clear
+        button.isEnabled = true
+        return button
+    }()
+
+    private let sortButton: UIButton = {
         let button = UIButton(type: .custom)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = .clear
@@ -59,6 +68,12 @@ class HomeViewController: UIViewController {
         return activityIndicator
     }()
 
+    private var imgSort: UIImage = {
+        let sortImage = UIImage(named: "icon_sort")
+//        sortImage?.withTintColor(.blue)
+        return sortImage!
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         fetchPokemonDataInRange()
@@ -77,8 +92,14 @@ class HomeViewController: UIViewController {
         menuImage?.withTintColor(.darkGray)
         menuButton.setImage(menuImage, for: .normal)
         menuButton.addTarget(self, action: #selector(menuButtonTapped), for: .touchUpInside)
+
+        // sortButton
+        sortButton.setImage(imgSort, for: .normal)
+        sortButton.addTarget(self, action: #selector(sortPokemons), for: .touchUpInside)
+
         customView.addSubview(logo)
         customView.addSubview(menuButton)
+        customView.addSubview(sortButton)
         view.addSubview(customView)
 
         NSLayoutConstraint.activate([
@@ -94,6 +115,13 @@ class HomeViewController: UIViewController {
         ])
 
         NSLayoutConstraint.activate([
+            sortButton.topAnchor.constraint(equalTo: logo.bottomAnchor, constant: 0),
+            sortButton.widthAnchor.constraint(equalToConstant: 35),
+            sortButton.heightAnchor.constraint(equalToConstant: 35),
+            sortButton.trailingAnchor.constraint(equalTo: menuButton.leadingAnchor, constant: -5)
+        ])
+
+        NSLayoutConstraint.activate([
             menuButton.topAnchor.constraint(equalTo: logo.bottomAnchor, constant: 0),
             menuButton.widthAnchor.constraint(equalToConstant: 40),
             menuButton.heightAnchor.constraint(equalToConstant: 40),
@@ -102,6 +130,10 @@ class HomeViewController: UIViewController {
     }
 
     private func configureScrollView() {
+
+        /*if let scrollView = scrollView as? UIScrollView {
+            scrollView.removeFromSuperview()
+        }*/
 
         customView.addSubview(scrollView)
         scrollView.addSubview(contentView)
@@ -142,6 +174,7 @@ class HomeViewController: UIViewController {
         ])
 
         tableView.isHidden = true
+        sortButton.isHidden = true
     }
 
     private func showLoadingIndicator() {
@@ -180,7 +213,7 @@ class HomeViewController: UIViewController {
         let dispatchGroup = DispatchGroup()
         var newPokemonList: [Pokemon] = []
 
-        for id in 1...2 {
+        for id in 1...500 {
             dispatchGroup.enter()
             service.getPokemonInfo(id: id) { result in
                 DispatchQueue.main.async {
@@ -193,7 +226,7 @@ class HomeViewController: UIViewController {
                         print("Successfully fetched data for Pokemon with ID: \(data.id)")
                     }
                     // pokemon list recebe newPokemonList ordenado por id
-                    pokemonList = newPokemonList.sorted(by: { $0.id > $1.id })
+                    pokemonList = newPokemonList.sorted(by: { $0.id < $1.id })
                     dispatchGroup.leave()
                 }
             }
@@ -219,13 +252,22 @@ class HomeViewController: UIViewController {
     }
 
     @objc func menuButtonTapped() {
-        if scrollView.isHidden {
-            scrollView.isHidden = false
-            tableView.isHidden = true
-        } else {
-            scrollView.isHidden = true
-            tableView.isHidden = false
-        }
+        scrollView.isHidden = !scrollView.isHidden
+        tableView.isHidden = !tableView.isHidden
+        sortButton.isHidden = tableView.isHidden
     }
 
+    @objc func sortPokemons() {
+        // comprar o sortedList, se for up, ordena do menor para o maior, se for down, ordena do maior para o menor
+        print(sortedList)
+        if sortedList == "up" {
+            pokemonList = pokemonList.sorted(by: { $0.id > $1.id })
+            sortedList = "down"
+        } else {
+            pokemonList = pokemonList.sorted(by: { $0.id < $1.id })
+            sortedList = "up"
+        }
+
+        tableView.reloadData()
+    }
 }

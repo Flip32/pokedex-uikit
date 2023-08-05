@@ -23,10 +23,7 @@ class PokemonTableViewCell: UITableViewCell {
 
     private let imgView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
-//        imageView.layer.cornerRadius = 10
-//        imageView.clipsToBounds = true
         return imageView
     }()
 
@@ -56,6 +53,7 @@ extension PokemonTableViewCell {
         self.contentView.addSubview(nameLabel)
         self.contentView.addSubview(imgView)
         self.backgroundColor = .black
+        self.selectionStyle = .none
 
 
         NSLayoutConstraint.activate([
@@ -69,7 +67,7 @@ extension PokemonTableViewCell {
         ])
 
         NSLayoutConstraint.activate([
-            imgView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            imgView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
             imgView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
             imgView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
             imgView.heightAnchor.constraint(equalToConstant: 50),

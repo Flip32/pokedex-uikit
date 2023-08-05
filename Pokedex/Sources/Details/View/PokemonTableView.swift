@@ -1,14 +1,6 @@
-
 import UIKit
 
 class PokemonTableView: UITableView {
-    
-    private let titleLabel: UILabel = {
-        let l = UILabel()
-        l.text = "Teste comp"
-        l.translatesAutoresizingMaskIntoConstraints = false
-        return l
-    }()
 
     // MARK: - Init
     override init(frame: CGRect, style: UITableView.Style) {
@@ -20,39 +12,29 @@ class PokemonTableView: UITableView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func addMyContraints() {
-        NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 20),
-            titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-            titleLabel.widthAnchor.constraint(equalToConstant: 50),
-            titleLabel.heightAnchor.constraint(equalToConstant: 24)
-        ])
-    }
 
     func configure() {
-        backgroundColor = .purple
+        backgroundColor = .black
         separatorStyle = .none
 
-        addSubview(titleLabel)
-        addMyContraints()
-
-        print("chegou aqui no final do configure table view")
 
         delegate = self
         dataSource = self
         register(PokemonTableViewCell.self, forCellReuseIdentifier: PokemonTableViewCell.reuseIdentifier)
+    }
+
+    @objc func menuButtonTapped() {
+        print("clicou no menu button TableView")
     }
 }
 
 
 extension PokemonTableView: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        print("ta chegando aqui na teble view func")
-        print("ta chegando aqui na teble view func")
-        print("ta chegando aqui na teble view func")
         guard let cell = tableView.dequeueReusableCell(
                 withIdentifier: PokemonTableViewCell.reuseIdentifier,
-                for: indexPath) as? PokemonTableViewCell else {
+                for: indexPath) as? PokemonTableViewCell
+        else {
             return UITableViewCell()
         }
 

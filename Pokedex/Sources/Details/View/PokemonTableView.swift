@@ -1,14 +1,6 @@
-
 import UIKit
 
 class PokemonTableView: UITableView {
-    
-    private let titleLabel: UILabel = {
-        let l = UILabel()
-        l.text = "Teste comp"
-        l.translatesAutoresizingMaskIntoConstraints = false
-        return l
-    }()
 
     // MARK: - Init
     override init(frame: CGRect, style: UITableView.Style) {
@@ -20,23 +12,10 @@ class PokemonTableView: UITableView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func addMyContraints() {
-        NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 20),
-            titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-            titleLabel.widthAnchor.constraint(equalToConstant: 50),
-            titleLabel.heightAnchor.constraint(equalToConstant: 24)
-        ])
-    }
-
     func configure() {
-        backgroundColor = .purple
+        backgroundColor = .black
         separatorStyle = .none
 
-        addSubview(titleLabel)
-        addMyContraints()
-
-        print("chegou aqui no final do configure table view")
 
         delegate = self
         dataSource = self
@@ -47,12 +26,10 @@ class PokemonTableView: UITableView {
 
 extension PokemonTableView: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        print("ta chegando aqui na teble view func")
-        print("ta chegando aqui na teble view func")
-        print("ta chegando aqui na teble view func")
         guard let cell = tableView.dequeueReusableCell(
                 withIdentifier: PokemonTableViewCell.reuseIdentifier,
-                for: indexPath) as? PokemonTableViewCell else {
+                for: indexPath) as? PokemonTableViewCell
+        else {
             return UITableViewCell()
         }
 
@@ -66,5 +43,27 @@ extension PokemonTableView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         print("Chegou no delegate", pokemonList.count)
         return pokemonList.count
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let selectedPokemon = pokemonList[indexPath.row]
+        print("Pokémon selecionado:", selectedPokemon.name)
+
+        // TODO - Melhorar essa forma de navegar
+        func findParentViewController() -> UIViewController? {
+            var parentResponder: UIResponder? = self
+            while parentResponder != nil {
+                parentResponder = parentResponder?.next
+                if let viewController = parentResponder as? UIViewController {
+                    return viewController
+                }
+            }
+            return nil
+        }
+        let pokemonController = PokemonController()
+        pokemonController.pokemonId = selectedPokemon.id
+        if let homeViewController = findParentViewController() as? HomeViewController {
+            homeViewController.navigationController?.pushViewController(pokemonController, animated: true)
+        }
     }
 }

@@ -8,7 +8,7 @@ class PokemonTableViewCell: UITableViewCell {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 16)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = .white
+        label.textColor = .black
         return label
     }()
 
@@ -24,17 +24,7 @@ class PokemonTableViewCell: UITableViewCell {
 
     func configure(with pokemon: Pokemon) {
         nameLabel.text = pokemon.name
-        print("PokemonTableViewCell", pokemon)
-
-        print("Chegou no configure view da cell")
-        print("Chegou no configure view da cell")
-        print("Chegou no configure view da cell")
-        print("Chegou no configure view da cell")
-        print("Chegou no configure view da cell")
-        backgroundColor = .blue
-        translatesAutoresizingMaskIntoConstraints = false
     }
-
 }
 
 extension PokemonTableViewCell {

@@ -5,56 +5,69 @@ protocol HomeViewDelegate: AnyObject {
 }
 
 class HomeViewController: UIViewController {
-    private var customView: UIView? = nil
-    private var tableView: PokemonTableView? = nil
+    private let customView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
+    private let tableView: PokemonTableView = {
+        let tableView = PokemonTableView(frame: .zero, style: .plain)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.estimatedRowHeight = 100
+        tableView.rowHeight = UITableView.automaticDimension
+        return tableView
+    }()
 //    private var scrollview: HomeView? = nil
-    private var loadingIndicator: UIActivityIndicatorView?
+    private var loadingIndicator: UIActivityIndicatorView = {
+        let activityIndicator = UIActivityIndicatorView(style: .large)
+        activityIndicator.color = .gray
+        return activityIndicator
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureView()
         fetchPokemonDataInRange()
     }
 
-    private func buildView() {
-        customView = UIView(frame: view.bounds)
-        guard let customView = customView else { return }
+    private func configureView() {
+        configureCustomView()
+        configureTableView()
 
-        tableView = PokemonTableView(frame: customView.bounds, style: .plain)
-        guard let tableView = tableView else { return }
-        print("passou do table view guard let")
+        loadingIndicator.center = view.center
+    }
 
-        tableView.delegate = tableView
-        tableView.dataSource = tableView
-
-        tableView.register(PokemonTableViewCell.self, forCellReuseIdentifier: PokemonTableViewCell.reuseIdentifier)
-
-        customView.addSubview(tableView)
+    private func configureCustomView() {
         view.addSubview(customView)
 
-        view.backgroundColor = UIColor.systemPink
-
-        /*NSLayoutConstraint.activate([
+        NSLayoutConstraint.activate([
             customView.topAnchor.constraint(equalTo: view.topAnchor),
             customView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             customView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             customView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])*/
+        ])
+    }
 
-        tableView.reloadData()
+    private func configureTableView() {
+        customView.addSubview(tableView)
+
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: customView.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: customView.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: customView.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: customView.bottomAnchor)
+        ])
     }
 
     private func showLoadingIndicator() {
-        loadingIndicator = UIActivityIndicatorView(style: .large)
-        loadingIndicator?.center = view.center
-        loadingIndicator?.color = .gray
-        loadingIndicator?.startAnimating()
-        view.addSubview(loadingIndicator!)
+        view.addSubview(loadingIndicator)
+        loadingIndicator.startAnimating()
     }
 
     private func hideLoadingIndicator() {
-        loadingIndicator?.stopAnimating()
-        loadingIndicator?.removeFromSuperview()
-        loadingIndicator = nil
+        loadingIndicator.stopAnimating()
+        loadingIndicator.removeFromSuperview()
     }
 
     // MARK: - Actions
@@ -62,33 +75,28 @@ class HomeViewController: UIViewController {
         print("vai chamar a api")
         showLoadingIndicator()
         let service = PokemonService()
-        let dispatchGroup = DispatchGroup()
-        var newPokemonList: [Pokemon] = []
 
         for id in 1...2 {
-            dispatchGroup.enter()
-            service.getPokemonInfo(id: id) { result in
-                DispatchQueue.main.async {
-                    switch result {
-                    case let .failure(error):
-                        print(error)
-                    case let .success(data):
-                        let newPokemon = Pokemon(id: data.id, name: data.name, bioDescription: "teste descricao", image: data.sprites.other?.home?.frontDefault ?? imageNotFound, weight: data.weight, height: data.height, types: data.types, sprites: data.sprites, abilities: data.abilities)
-                        newPokemonList.append(newPokemon)
-                        print("Successfully fetched data for Pokemon with ID: \(data.id)")
+            service.getPokemonInfo(id: id) { [weak self] result in
+                switch result {
+                case let .failure(error):
+                    print(error)
+                    DispatchQueue.main.async {
+                        self?.hideLoadingIndicator()
                     }
-                    // pokemon list recebe newPokemonList ordenado por id
-                    pokemonList = newPokemonList.sorted(by: { $0.id > $1.id })
-                    dispatchGroup.leave()
+                case let .success(data):
+                    let newPokemon = Pokemon(id: data.id, name: data.name, bioDescription: "teste descricao", image: data.sprites.other?.home?.frontDefault ?? imageNotFound, weight: data.weight, height: data.height, types: data.types, sprites: data.sprites, abilities: data.abilities)
+                    pokemonList.append(newPokemon)
+                    print("Successfully fetched data for Pokemon with ID: \(data.id)")
+
+                    DispatchQueue.main.async {
+                        // pokemon list recebe newPokemonList ordenado por id
+//                        pokemonList = newPokemonList.sorted(by: { $0.id > $1.id })
+                        self?.hideLoadingIndicator()
+                        self?.tableView.reloadData()
+                    }
                 }
             }
-        }
-
-        dispatchGroup.notify(queue: .main) {
-            print("chegou no fim")
-            print("pokemon list", pokemonList[0])
-            self.buildView()
-            self.hideLoadingIndicator()
         }
     }
 

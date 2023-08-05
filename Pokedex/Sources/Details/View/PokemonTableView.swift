@@ -22,11 +22,6 @@ class PokemonTableView: UITableView {
 
     func addMyContraints() {
         NSLayoutConstraint.activate([
-            topAnchor.constraint(equalTo: self.topAnchor),
-            leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            bottomAnchor.constraint(equalTo: self.bottomAnchor),
-            
             titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 20),
             titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
             titleLabel.widthAnchor.constraint(equalToConstant: 50),
@@ -37,22 +32,16 @@ class PokemonTableView: UITableView {
     func configure() {
         backgroundColor = .purple
         separatorStyle = .none
-        translatesAutoresizingMaskIntoConstraints = false
-
 
         addSubview(titleLabel)
         addMyContraints()
 
         print("chegou aqui no final do configure table view")
 
-//        delegate = self
-//        dataSource = self
-
-//        register(PokemonTableViewCell.self, forCellReuseIdentifier: PokemonTableViewCell.reuseIdentifier)
-
-//        reloadData()
+        delegate = self
+        dataSource = self
+        register(PokemonTableViewCell.self, forCellReuseIdentifier: PokemonTableViewCell.reuseIdentifier)
     }
-
 }
 
 

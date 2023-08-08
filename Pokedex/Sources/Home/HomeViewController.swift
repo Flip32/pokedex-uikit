@@ -213,7 +213,7 @@ class HomeViewController: UIViewController {
         let dispatchGroup = DispatchGroup()
         var newPokemonList: [Pokemon] = []
 
-        for id in 1...500 {
+        for id in 1...800 {
             dispatchGroup.enter()
             service.getPokemonInfo(id: id) { result in
                 DispatchQueue.main.async {

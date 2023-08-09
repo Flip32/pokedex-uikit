@@ -82,6 +82,10 @@ class TypeCardView: UIView {
             return UIColor(red: 0.9, green: 0.3, blue: 0.5, alpha: 1)
         case "fairy":
             return UIColor(red: 0.9, green: 0.6, blue: 0.7, alpha: 1)
+        case "dragon":
+            return UIColor(red: 0.5, green: 0.3, blue: 0.9, alpha: 1)
+        case "dark":
+            return UIColor(red: 0.5, green: 0.4, blue: 0.3, alpha: 1)
         default:
             return UIColor.systemGray
         }

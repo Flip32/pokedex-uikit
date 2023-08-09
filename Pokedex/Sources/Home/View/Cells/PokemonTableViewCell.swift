@@ -40,8 +40,9 @@ class PokemonTableViewCell: UITableViewCell {
     func configure(with pokemon: Pokemon) {
         idLabel.text = String(format: "%03d", pokemon.id)
         nameLabel.text = pokemon.name.capitalized
+        let imageForced = pokemon.image.isEmpty ? "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/\(pokemon.id).png" : pokemon.image
 
-        if let imageUrl = URL(string: pokemon.image) {
+        if let imageUrl = URL(string: imageForced) {
             imgView.sd_setImage(with: imageUrl, placeholderImage: UIImage(named: "placeholderImage"))
         }
     }

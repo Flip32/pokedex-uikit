@@ -11,7 +11,7 @@ class PokemonService {
 
     func getPokemonsCached(genIDs: [Int]?, callback: @escaping (Result<[Pokemon], ServiceError>) -> Void) {
         print("get pokemons cached")
-        print("genIDs", genIDs)
+//        print("genIDs", genIDs)
 
         var path = "/cached"
         if let genIDs = genIDs {

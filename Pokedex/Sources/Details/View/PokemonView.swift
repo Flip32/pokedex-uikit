@@ -1,4 +1,5 @@
 import UIKit
+import SDWebImage
 
 
 class PokemonView: UIView {
@@ -8,18 +9,8 @@ class PokemonView: UIView {
     private var img: UIImageView = {
         let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
-        image.layer.cornerRadius = 10
-        image.clipsToBounds = true
         return image
     }()
-
-//    private var bioDescription: UILabel = {
-//        let bio = UILabel()
-//        bio.translatesAutoresizingMaskIntoConstraints = false
-//        bio.textColor = .darkGray
-//        bio.numberOfLines = 0
-//        return bio
-//    } ()
 
     private var name: UILabel = {
         let n = UILabel()
@@ -106,6 +97,24 @@ class PokemonView: UIView {
         return l
     }()
 
+    private var labelForEvolution: UILabel = {
+        let l = UILabel()
+        l.font = UIFont.systemFont(ofSize: 20)
+        l.font = UIFont.boldSystemFont(ofSize: 18)
+        l.translatesAutoresizingMaskIntoConstraints = false
+        l.textColor = .darkGray
+        return l
+    }()
+
+    private var evolutionContainer: UIStackView = {
+        let v = UIStackView()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.axis = .horizontal
+        v.distribution = .fillProportionally
+        v.spacing = 10
+        return v
+    }()
+
     init(pokemonId: Int?) {
         super.init(frame: .zero)
         self.pokemonId = pokemonId
@@ -115,21 +124,20 @@ class PokemonView: UIView {
             pokemon = pokemonList.first {
                 $0.id == id
             }
-            print("aqui o types pokemon: \(pokemon?.types)")
 
             if let pokemon = pokemon {
                 print(pokemon.name)
+                print("imagem: ", pokemon.image)
+                let imageForced = pokemon.image.isEmpty ? "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/\(pokemon.id).png" : pokemon.image
                 name.text = pokemon.name.capitalized
-                if let imageUrl = URL(string: pokemon.image) {
+                if let imageUrl = URL(string: imageForced) {
                     img.sd_setImage(with: imageUrl, placeholderImage: UIImage(named: "placeholderImage"))
                 }
-//                bioDescription.text = pokemon.bioDescription
                 weight.text = "Weight: \(pokemon.weight)"
                 height.text = "Height: \(pokemon.height)"
 
                 addSubview(name)
                 addSubview(img)
-//                addSubview(bioDescription)
 
                 cardInfo.addArrangedSubview(weight)
                 cardInfo.addArrangedSubview(height)
@@ -163,6 +171,21 @@ class PokemonView: UIView {
                 }
 
                 addSubview(abilityView)
+
+                // Create Evolutions
+                guard let evolution = pokemon.evolution else {
+                    addMyConstraints()
+                    return
+                }
+                labelForEvolution.text = "Evolutions: "
+                addSubview(labelForEvolution)
+                for e in evolution {
+                    print("evolution: ", e)
+                    createCardEvolution(for: e)
+                }
+
+                addSubview(evolutionContainer)
+
                 addMyConstraints()
             }
         }
@@ -181,16 +204,10 @@ class PokemonView: UIView {
 
         NSLayoutConstraint.activate([
             img.centerXAnchor.constraint(equalTo: centerXAnchor),
-            img.topAnchor.constraint(equalTo: name.bottomAnchor, constant: 10),
+            img.topAnchor.constraint(equalTo: name.bottomAnchor, constant: 0),
             img.widthAnchor.constraint(equalToConstant: 250),
             img.heightAnchor.constraint(equalToConstant: 250)
         ])
-
-        /*NSLayoutConstraint.activate([
-            bioDescription.centerXAnchor.constraint(equalTo: centerXAnchor),
-            bioDescription.topAnchor.constraint(equalTo: img.bottomAnchor, constant: 10),
-            bioDescription.widthAnchor.constraint(equalToConstant: 250),
-        ])*/
 
         NSLayoutConstraint.activate([
             cardInfo.centerXAnchor.constraint(equalTo: centerXAnchor),
@@ -213,11 +230,22 @@ class PokemonView: UIView {
         ])
 
         NSLayoutConstraint.activate([
-//            abilityView.centerXAnchor.constraint(equalTo: centerXAnchor),
             abilityView.topAnchor.constraint(equalTo: abilityLabel.bottomAnchor, constant: 2),
             abilityView.widthAnchor.constraint(equalToConstant: 250),
             abilityView.heightAnchor.constraint(greaterThanOrEqualToConstant: 0),
             abilityView.leadingAnchor.constraint(equalTo: abilityLabel.leadingAnchor, constant: 20),
+        ])
+
+        NSLayoutConstraint.activate([
+            labelForEvolution.centerXAnchor.constraint(equalTo: centerXAnchor),
+            labelForEvolution.topAnchor.constraint(equalTo: abilityView.bottomAnchor, constant: 20),
+            labelForEvolution.widthAnchor.constraint(equalToConstant: 250),
+        ])
+
+        NSLayoutConstraint.activate([
+            evolutionContainer.leadingAnchor.constraint(equalTo: labelForEvolution.leadingAnchor, constant: 20),
+            evolutionContainer.centerXAnchor.constraint(equalTo: centerXAnchor),
+            evolutionContainer.topAnchor.constraint(equalTo: labelForEvolution.bottomAnchor, constant: 0),
         ])
     }
 
@@ -227,5 +255,16 @@ class PokemonView: UIView {
         typesContainer.addArrangedSubview(cardTypeView)
 
         cardTypeView.type = type
+    }
+
+    func createCardEvolution(for evolution: Evolution) {
+        let cardEvolutionView = EvolutionCardView()
+
+        evolutionContainer.addArrangedSubview(cardEvolutionView)
+
+        let pokemon: Pokemon = pokemonList.first { $0.id == evolution.id }!
+        let imageForced = pokemon.image.isEmpty ? "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/\(pokemon.id).png" : pokemon.image
+
+        cardEvolutionView.img = imageForced
     }
 }

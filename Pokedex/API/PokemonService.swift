@@ -7,7 +7,7 @@ enum ServiceError: Error {
 }
 
 class PokemonService {
-    private let baseURL = "http://localhost:3334"
+    private let baseURL = "https://flip-pokemon-api.azurewebsites.net"
 
     func getPokemonsCached(genIDs: [Int]?, callback: @escaping (Result<[Pokemon], ServiceError>) -> Void) {
         print("get pokemons cached")

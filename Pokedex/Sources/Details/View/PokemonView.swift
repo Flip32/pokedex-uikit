@@ -140,8 +140,8 @@ class PokemonView: UIView {
 
                 // Imprimir cada tipo de types
                 for t in pokemon.types {
-                    print("aqui o type: \(t.type.name)")
-                    createCardType(for: t.type.name)
+                    print("aqui o type: \(t)")
+                    createCardType(for: t)
                 }
                 addSubview(typesContainer)
 
@@ -151,14 +151,14 @@ class PokemonView: UIView {
 
                 let abilities = pokemon.abilities
                 abilities.forEach { a in
-                    print("ability: ", a.ability.name)
+                    print("ability: ", a)
                     let l = UILabel()
                     l.translatesAutoresizingMaskIntoConstraints = false
                     l.textColor = .darkGray
                     l.text = "Abilities"
                     l.font = UIFont.boldSystemFont(ofSize: 18)
                     l.textAlignment = .left
-                    l.text = a.ability.name.capitalized
+                    l.text = a.capitalized
                     abilityView.addArrangedSubview(l)
                 }
 

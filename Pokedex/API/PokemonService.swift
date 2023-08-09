@@ -1,71 +1,5 @@
 import Foundation
 
-struct AbilityData: Codable {
-    let name: String
-    let url: String
-}
-
-struct Ability: Codable {
-    let ability: AbilityData
-    let is_hidden: Bool?
-}
-
-struct Home: Codable {
-    let frontDefault: String?
-
-    enum CodingKeys: String, CodingKey {
-        case frontDefault = "front_default"
-    }
-}
-
-struct Other: Codable {
-    let home: Home?
-}
-
-struct Sprite: Codable {
-    let backDefault: URL?
-    let backFemale: URL?
-    let backShiny: URL?
-    let backShinyFemale: URL?
-    let frontDefault: String?
-    let frontFemale: URL?
-    let frontShiny: URL?
-    let frontShinyFemale: URL?
-    let other: Other?
-
-    enum CodingKeys: String, CodingKey {
-        case backDefault = "back_default"
-        case backFemale = "back_female"
-        case backShiny = "back_shiny"
-        case backShinyFemale = "back_shiny_female"
-        case frontDefault = "front_default"
-        case frontFemale = "front_female"
-        case frontShiny = "front_shiny"
-        case frontShinyFemale = "front_shiny_female"
-        case other = "other"
-    }
-}
-
-struct TypeSlot: Codable {
-    let type: TypeData
-}
-
-struct TypeData: Codable {
-    let name: String
-//    let url: URL
-}
-
-struct PokemonInitial: Codable {
-    let id: Int
-    let weight: Int
-    let height: Int
-    let name: String
-    let sprites: Sprite
-    let types: [TypeSlot]
-    let imgDefault: String?
-    let abilities: [Ability]
-}
-
 enum ServiceError: Error {
     case invalidURL
     case network(Error?)
@@ -73,18 +7,28 @@ enum ServiceError: Error {
 }
 
 class PokemonService {
-    private let baseURL = "https://pokeapi.co/api/v2"
+    private let baseURL = "http://localhost:3334"
 
-    // Recupera os dados iniciais para criar a lista de pokemons
-    func getPokemonInfo(id: Int, callback: @escaping (Result<PokemonInitial, ServiceError>) -> Void) {
-        print("no get porkemon id", id)
-        let path = "/pokemon/\(id)"
-        print("path", path)
+    func getPokemonsCached(genIDs: [Int]?, callback: @escaping (Result<[Pokemon], ServiceError>) -> Void) {
+        print("get pokemons cached")
+        print("genIDs", genIDs)
+
+        var path = "/cached"
+        if let genIDs = genIDs {
+            let formattedGenIDs = genIDs.map {
+                String($0)
+            }
+                .joined(separator: ",")
+            let query = "genIDs=[\(formattedGenIDs)]"
+                path = path + "?" + query
+        }
 
         guard let url = URL(string: baseURL + path) else {
             callback(.failure(.invalidURL))
             return
         }
+        
+        print("url => ", url)
 
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
             guard let data = data else {
@@ -92,15 +36,14 @@ class PokemonService {
             }
 
             do {
-                let json = try JSONDecoder().decode(PokemonInitial.self, from: data)
+                let json = try JSONDecoder().decode([Pokemon].self, from: data)
                 callback(.success(json))
             } catch {
                 callback(.failure(.decodeFail(error)))
             }
         }
+
         task.resume()
     }
-
-
 }
 

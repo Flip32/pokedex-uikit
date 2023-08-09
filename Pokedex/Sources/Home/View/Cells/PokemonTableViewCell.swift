@@ -29,7 +29,6 @@ class PokemonTableViewCell: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        print("chega aqui no override init da cell")
         self.configureView()
     }
 

@@ -47,6 +47,40 @@ class HomeViewController: UIViewController {
         return sortImage!
     }()
 
+    private var searchTextField: UITextField = {
+        let textField = UITextField()
+        textField.textColor = .white
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.layer.cornerRadius = 20
+        textField.layer.borderWidth = 1
+        textField.layer.borderColor = UIColor.white.cgColor
+        let placeholderAttributes: [NSAttributedString.Key: Any] = [
+            .foregroundColor: UIColor.gray,
+        ]
+        textField.attributedPlaceholder = NSAttributedString(string: "Search Pokémon by name", attributes: placeholderAttributes)
+
+        let searchIconImageView = UIImageView(image: UIImage(systemName: "magnifyingglass"))
+        searchIconImageView.tintColor = .white
+        searchIconImageView.contentMode = .center
+
+        let leftViewContainer = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+        leftViewContainer.contentMode = .left
+        leftViewContainer.addSubview(searchIconImageView)
+
+        textField.leftView = leftViewContainer
+        textField.leftViewMode = .always
+
+        searchIconImageView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            leftViewContainer.widthAnchor.constraint(equalToConstant: 40),
+            searchIconImageView.leadingAnchor.constraint(equalTo: leftViewContainer.leadingAnchor, constant: 10),
+            searchIconImageView.centerYAnchor.constraint(equalTo: leftViewContainer.centerYAnchor)
+        ])
+
+        return textField
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         configureView()
@@ -60,12 +94,15 @@ class HomeViewController: UIViewController {
     }
 
     private func configureCustomView() {
+        // Search
+        searchTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
 
         // sortButton
         sortButton.setImage(imgSort, for: .normal)
         sortButton.addTarget(self, action: #selector(sortPokemons), for: .touchUpInside)
 
         customView.addSubview(logo)
+        customView.addSubview(searchTextField)
         customView.addSubview(sortButton)
         view.addSubview(customView)
 
@@ -82,18 +119,26 @@ class HomeViewController: UIViewController {
         ])
 
         NSLayoutConstraint.activate([
-            sortButton.topAnchor.constraint(equalTo: logo.bottomAnchor, constant: 0),
+            searchTextField.topAnchor.constraint(equalTo: logo.bottomAnchor, constant: 20),
+            searchTextField.leadingAnchor.constraint(equalTo: customView.leadingAnchor, constant: 5),
+            searchTextField.trailingAnchor.constraint(equalTo: sortButton.leadingAnchor, constant: -5),
+            searchTextField.heightAnchor.constraint(equalToConstant: 35)
+        ])
+
+        NSLayoutConstraint.activate([
+            sortButton.topAnchor.constraint(equalTo: logo.bottomAnchor, constant: 20),
             sortButton.widthAnchor.constraint(equalToConstant: 35),
             sortButton.heightAnchor.constraint(equalToConstant: 35),
             sortButton.trailingAnchor.constraint(equalTo: customView.trailingAnchor, constant: -5)
         ])
+
     }
 
     private func configureTableView() {
         customView.addSubview(tableView)
 
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: sortButton.bottomAnchor, constant: 20),
+            tableView.topAnchor.constraint(equalTo: searchTextField.bottomAnchor, constant: 0),
             tableView.leadingAnchor.constraint(equalTo: customView.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: customView.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: customView.bottomAnchor, constant: -20)
@@ -123,10 +168,11 @@ class HomeViewController: UIViewController {
             DispatchQueue.main.async {
                 switch result {
                 case let .failure(error):
-                        print("caiu no error")
+                    print("caiu no error")
                     print(error)
                 case let .success(data):
                     pokemonList = data.sorted(by: { $0.id < $1.id })
+                    pokemonListInitial = data.sorted(by: { $0.id < $1.id })
                 }
                 dispatchGroup.leave()
             }
@@ -159,5 +205,18 @@ class HomeViewController: UIViewController {
         }
 
         tableView.reloadData()
+    }
+
+    @objc private func textFieldDidChange(_ textField: UITextField) {
+        if let searchText = textField.text {
+            if searchText.isEmpty {
+                pokemonList = pokemonListInitial
+            } else {
+                pokemonList = pokemonListInitial.filter {
+                    $0.name.localizedCaseInsensitiveContains(searchText)
+                }
+            }
+            tableView.reloadData()
+        }
     }
 }

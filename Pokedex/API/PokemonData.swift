@@ -19,4 +19,5 @@ struct Pokemon: Codable {
 
 
 var pokemonList: [Pokemon] = []
+var pokemonListInitial: [Pokemon] = []
 var imageNotFound = "https://cdn.neemo.com.br/uploads/settings_webdelivery/logo/3136/image-not-found.jpg"

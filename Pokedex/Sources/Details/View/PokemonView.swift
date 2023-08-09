@@ -271,6 +271,7 @@ class PokemonView: UIView {
             return
         }
 
+        // Verificar, pois nem sempre a lista completa ta carregada
         guard let pokemon = pokemonList.first(where: { $0.id == id }) else {
             cardEvolutionView.img = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/\(id).png"
             return

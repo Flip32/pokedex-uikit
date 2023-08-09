@@ -172,21 +172,22 @@ class PokemonView: UIView {
 
                 addSubview(abilityView)
 
-                // Create Evolutions
-                guard let evolution = pokemon.evolution else {
-                    addMyConstraints()
-                    return
-                }
-                labelForEvolution.text = "Evolutions: "
-                addSubview(labelForEvolution)
-                for e in evolution {
-                    print("evolution: ", e)
-                    createCardEvolution(for: e)
-                }
-
-                addSubview(evolutionContainer)
-
                 addMyConstraints()
+
+                // Create Evolutions
+                if let evolution = pokemon.evolution, evolution.count > 1 {
+                    labelForEvolution.text = "Evolutions: "
+                    addSubview(labelForEvolution)
+                    for e in evolution {
+                        print("evolution: ", e)
+                        createCardEvolution(for: e)
+                    }
+
+                    addSubview(evolutionContainer)
+                    addConstraintsForEvolution()
+                }
+
+
             }
         }
     }
@@ -235,7 +236,9 @@ class PokemonView: UIView {
             abilityView.heightAnchor.constraint(greaterThanOrEqualToConstant: 0),
             abilityView.leadingAnchor.constraint(equalTo: abilityLabel.leadingAnchor, constant: 20),
         ])
+    }
 
+    func addConstraintsForEvolution() {
         NSLayoutConstraint.activate([
             labelForEvolution.centerXAnchor.constraint(equalTo: centerXAnchor),
             labelForEvolution.topAnchor.constraint(equalTo: abilityView.bottomAnchor, constant: 20),
@@ -262,7 +265,16 @@ class PokemonView: UIView {
 
         evolutionContainer.addArrangedSubview(cardEvolutionView)
 
-        let pokemon: Pokemon = pokemonList.first { $0.id == evolution.id }!
+        let imageForcedInitial = imageNotFound
+        guard let id = evolution.id else {
+            cardEvolutionView.img = imageForcedInitial
+            return
+        }
+
+        guard let pokemon = pokemonList.first(where: { $0.id == id }) else {
+            cardEvolutionView.img = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/\(id).png"
+            return
+        }
         let imageForced = pokemon.image.isEmpty ? "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/\(pokemon.id).png" : pokemon.image
 
         cardEvolutionView.img = imageForced

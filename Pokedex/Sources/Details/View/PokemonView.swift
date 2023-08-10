@@ -144,11 +144,10 @@ class PokemonView: UIView {
                 addSubview(cardInfo)
 
                 labelForTypes.text = "Types: "
-                typesContainer.addArrangedSubview(labelForTypes)
+                addSubview(labelForTypes)
 
                 // Imprimir cada tipo de types
                 for t in pokemon.types {
-                    print("aqui o type: \(t)")
                     createCardType(for: t)
                 }
                 addSubview(typesContainer)
@@ -187,7 +186,6 @@ class PokemonView: UIView {
                     addConstraintsForEvolution()
                 }
 
-
             }
         }
     }
@@ -218,10 +216,16 @@ class PokemonView: UIView {
         ])
 
         NSLayoutConstraint.activate([
+            labelForTypes.centerXAnchor.constraint(equalTo: centerXAnchor),
+            labelForTypes.topAnchor.constraint(equalTo: cardInfo.bottomAnchor, constant: 20),
+            labelForTypes.widthAnchor.constraint(equalToConstant: 250),
+        ])
+
+        NSLayoutConstraint.activate([
+            typesContainer.leadingAnchor.constraint(equalTo: labelForTypes.leadingAnchor, constant: 40),
+//            typesContainer.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
             typesContainer.centerXAnchor.constraint(equalTo: centerXAnchor),
-            typesContainer.topAnchor.constraint(equalTo: cardInfo.bottomAnchor, constant: 20),
-            typesContainer.widthAnchor.constraint(equalToConstant: 250),
-            typesContainer.heightAnchor.constraint(greaterThanOrEqualToConstant: 0)
+            typesContainer.topAnchor.constraint(equalTo: labelForTypes.bottomAnchor, constant: 5),
         ])
 
         NSLayoutConstraint.activate([

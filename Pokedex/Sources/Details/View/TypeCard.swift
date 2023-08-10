@@ -17,6 +17,9 @@ class TypeCardView: UIView {
         l.textColor = .white
         l.font = UIFont.boldSystemFont(ofSize: 18)
         l.textAlignment = .center
+        l.adjustsFontSizeToFitWidth = true
+        l.minimumScaleFactor = 0.7
+        l.lineBreakMode = .byTruncatingTail
         return l
     }()
 
@@ -31,23 +34,16 @@ class TypeCardView: UIView {
     }
 
     func initIU() {
-        // Constraints
-        NSLayoutConstraint.activate([
-            // A view deve ter widh proporcional ao tamanho da typeLabel
-            leadingAnchor.constraint(equalTo: leadingAnchor), // Margem esquerda da container igual à margem esquerda do TypeCard
-            trailingAnchor.constraint(equalTo: trailingAnchor), // Margem direita da container igual à margem direita do TypeCard
-            topAnchor.constraint(equalTo: topAnchor), // Margem superior da container igual à margem superior do TypeCard
-            bottomAnchor.constraint(equalTo: bottomAnchor), // Margem inferior da container igual à margem inferior do TypeCard
-        ])
 
         addSubview(typeLabel)
-
         NSLayoutConstraint.activate([
-            typeLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5), // Margem esquerda da typeLabel com espaçamento de 5 em relação à container
-            typeLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -5), // Margem direita da typeLabel com espaçamento de 5 em relação à container
-            typeLabel.topAnchor.constraint(equalTo: topAnchor, constant: 5), // Margem superior da typeLabel com espaçamento de 5 em relação à container
-            typeLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5) // Margem inferior da typeLabel com espaçamento de 5 em relação à container
+            typeLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5),
+            typeLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -5),
+            typeLabel.topAnchor.constraint(equalTo: topAnchor, constant: 5),
+            typeLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5),
         ])
+
+        typeLabel.numberOfLines = 1
     }
 
     func findColor(type: String) -> UIColor {
@@ -98,6 +94,4 @@ class TypeCardView: UIView {
         layer.cornerRadius = 4
         layer.cornerCurve = .continuous
     }
-
-
 }

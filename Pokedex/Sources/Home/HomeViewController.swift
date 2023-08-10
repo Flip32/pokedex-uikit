@@ -164,7 +164,7 @@ class HomeViewController: UIViewController {
 
         dispatchGroup.enter()
 //        let genIDs = [1, 2, 3, 4, 5]
-        service.getPokemonsCached(genIDs: [1]) { result in
+        service.getPokemonsCached(genIDs: []) { result in
             DispatchQueue.main.async {
                 switch result {
                 case let .failure(error):

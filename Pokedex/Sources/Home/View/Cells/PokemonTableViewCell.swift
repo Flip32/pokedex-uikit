@@ -48,6 +48,7 @@ class PokemonTableViewCell: UITableViewCell {
     }
 }
 
+// MARK: - View Configuration
 extension PokemonTableViewCell {
     func configureView() {
         self.contentView.addSubview(idLabel)

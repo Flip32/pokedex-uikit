@@ -193,7 +193,10 @@ class PokemonView: UIView {
     required init?(coder: NSCoder) {
         fatalError()
     }
+}
 
+// MARK: - Config
+extension PokemonView {
     func addMyConstraints() {
         NSLayoutConstraint.activate([
             name.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 20),

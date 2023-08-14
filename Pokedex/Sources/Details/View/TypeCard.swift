@@ -45,7 +45,10 @@ class TypeCardView: UIView {
 
         typeLabel.numberOfLines = 1
     }
+}
 
+// MARK - Configure
+extension TypeCardView {
     func findColor(type: String) -> UIColor {
         switch type {
         case "normal":

@@ -13,19 +13,19 @@ class PokemonService {
 
     func fetchPokemonCachedList(genIDs: [Int]?) async throws -> [Pokemon] {
         var path = "/cached"
-        if let genIDs = genIDs {
+        /*if let genIDs = genIDs {
             let formattedGenIDs = genIDs.map {
                         String($0)
                     }
                     .joined(separator: ",")
-            let query = "genIDs=[\(formattedGenIDs)]"
+            let query = "genIDs=[\(formattedGenIDs)]".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
             path = path + "?" + query
-        }
+        }*/
 
-        guard let url = URL(string: baseURL + "/cached") else {
+        guard let url = URL(string: baseURL + path) else {
             throw ServiceError.invalidURL
         }
-        
+
         print("url: ", url)
 
         do {

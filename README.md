@@ -25,6 +25,7 @@ Certifique-se de ter o Xcode instalado para abrir e executar o aplicativo. Além
 
 O aplicativo utiliza uma API de Pokémon para buscar informações sobre os Pokémon. Certifique-se de que a API esteja disponível e acessível para que o aplicativo funcione corretamente.
 A api é de autoria própria, hopedado em servidor compartilhado. Por esse motivo, pode ser que a api não esteja disponível em alguns momentos, ou demore um pouco na primeira requisição.
+Para verificar se a api está funcionando, acesse o swagger da api: https://flip-pokemon-api.azurewebsites.net/api-docs/#/
 
 ## Contribuição
 

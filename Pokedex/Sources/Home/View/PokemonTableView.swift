@@ -2,7 +2,7 @@ import UIKit
 import SDWebImage
 
 class PokemonTableView: UITableView {
-
+    var viewModel: ListViewModelProtocol?
     // MARK: - Init
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
@@ -12,15 +12,22 @@ class PokemonTableView: UITableView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+}
 
+// MARK: - UI Methods
+extension PokemonTableView {
     func configure() {
         backgroundColor = .black
         separatorStyle = .none
 
-
         delegate = self
         dataSource = self
         register(PokemonTableViewCell.self, forCellReuseIdentifier: PokemonTableViewCell.reuseIdentifier)
+    }
+
+    func update(with viewModel: ListViewModelProtocol) {
+        self.viewModel = viewModel
+        reloadData()
     }
 }
 
@@ -34,7 +41,11 @@ extension PokemonTableView: UITableViewDataSource {
             return UITableViewCell()
         }
 
-        let pokemon = pokemonList[indexPath.row]
+        guard let pkList = viewModel?.pokemonList else {
+            return UITableViewCell()
+        }
+
+        let pokemon = pkList[indexPath.row]
         cell.configure(with: pokemon)
         return cell
     }
@@ -42,12 +53,17 @@ extension PokemonTableView: UITableViewDataSource {
 
 extension PokemonTableView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("Chegou no delegate", pokemonList.count)
-        return pokemonList.count
+        guard let viewModel = viewModel else {
+            return 0
+        }
+        return viewModel.pokemonList.count
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selectedPokemon = pokemonList[indexPath.row]
+        guard let viewModel = viewModel else {
+            return
+        }
+        let selectedPokemon = viewModel.pokemonList[indexPath.row]
         print("Pokémon selecionado:", selectedPokemon.name)
 
         // TODO - Melhorar essa forma de navegar
@@ -62,7 +78,7 @@ extension PokemonTableView: UITableViewDelegate {
             return nil
         }
         let pokemonController = PokemonController()
-        pokemonController.pokemonId = selectedPokemon.id
+        pokemonController.pokemon = selectedPokemon
         if let homeViewController = findParentViewController() as? HomeViewController {
             homeViewController.navigationController?.pushViewController(pokemonController, animated: true)
         }

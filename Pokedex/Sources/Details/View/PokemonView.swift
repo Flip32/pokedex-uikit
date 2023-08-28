@@ -3,7 +3,7 @@ import SDWebImage
 
 
 class PokemonView: UIView {
-    var pokemonId: Int?
+    var imageNotFound: String = "https://cdn.neemo.com.br/uploads/settings_webdelivery/logo/3136/image-not-found.jpg"
     var pokemon: Pokemon?
 
     private var img: UIImageView = {
@@ -115,79 +115,12 @@ class PokemonView: UIView {
         return v
     }()
 
-    init(pokemonId: Int?) {
+    init(pokemon: Pokemon?) {
         super.init(frame: .zero)
-        self.pokemonId = pokemonId
         backgroundColor = .black
+        configure()
 
-        if let id = pokemonId {
-            pokemon = pokemonList.first {
-                $0.id == id
-            }
 
-            if let pokemon = pokemon {
-                print(pokemon.name)
-                print("imagem: ", pokemon.image)
-                let imageForced = pokemon.image.isEmpty ? "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/\(pokemon.id).png" : pokemon.image
-                name.text = pokemon.name.capitalized
-                if let imageUrl = URL(string: imageForced) {
-                    img.sd_setImage(with: imageUrl, placeholderImage: UIImage(named: "placeholderImage"))
-                }
-                weight.text = "Weight: \(pokemon.weight)"
-                height.text = "Height: \(pokemon.height)"
-
-                addSubview(name)
-                addSubview(img)
-
-                cardInfo.addArrangedSubview(weight)
-                cardInfo.addArrangedSubview(height)
-                addSubview(cardInfo)
-
-                labelForTypes.text = "Types: "
-                addSubview(labelForTypes)
-
-                // Imprimir cada tipo de types
-                for t in pokemon.types {
-                    createCardType(for: t)
-                }
-                addSubview(typesContainer)
-
-                // Create abilities
-                abilityLabel.text = "Abilities: "
-                addSubview(abilityLabel)
-
-                let abilities = pokemon.abilities
-                abilities.forEach { a in
-                    print("ability: ", a)
-                    let l = UILabel()
-                    l.translatesAutoresizingMaskIntoConstraints = false
-                    l.textColor = .darkGray
-                    l.text = "Abilities"
-                    l.font = UIFont.boldSystemFont(ofSize: 18)
-                    l.textAlignment = .left
-                    l.text = a.capitalized
-                    abilityView.addArrangedSubview(l)
-                }
-
-                addSubview(abilityView)
-
-                addMyConstraints()
-
-                // Create Evolutions
-                if let evolution = pokemon.evolution, evolution.count > 1 {
-                    labelForEvolution.text = "Evolutions: "
-                    addSubview(labelForEvolution)
-                    for e in evolution {
-                        print("evolution: ", e)
-                        createCardEvolution(for: e)
-                    }
-
-                    addSubview(evolutionContainer)
-                    addConstraintsForEvolution()
-                }
-
-            }
-        }
     }
 
     required init?(coder: NSCoder) {
@@ -197,6 +130,71 @@ class PokemonView: UIView {
 
 // MARK: - Config
 extension PokemonView {
+
+    func configure() {
+        if let pokemon = pokemon {
+            print(pokemon.name)
+            print("imagem: ", pokemon.image)
+            let imageForced = pokemon.image.isEmpty ? "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/\(pokemon.id).png" : pokemon.image
+            name.text = pokemon.name.capitalized
+            if let imageUrl = URL(string: imageForced) {
+                img.sd_setImage(with: imageUrl, placeholderImage: UIImage(named: "placeholderImage"))
+            }
+            weight.text = "Weight: \(pokemon.weight)"
+            height.text = "Height: \(pokemon.height)"
+
+            addSubview(name)
+            addSubview(img)
+
+            cardInfo.addArrangedSubview(weight)
+            cardInfo.addArrangedSubview(height)
+            addSubview(cardInfo)
+
+            labelForTypes.text = "Types: "
+            addSubview(labelForTypes)
+
+            // Imprimir cada tipo de types
+            for t in pokemon.types {
+                createCardType(for: t)
+            }
+            addSubview(typesContainer)
+
+            // Create abilities
+            abilityLabel.text = "Abilities: "
+            addSubview(abilityLabel)
+
+            let abilities = pokemon.abilities
+            abilities.forEach { a in
+                print("ability: ", a)
+                let l = UILabel()
+                l.translatesAutoresizingMaskIntoConstraints = false
+                l.textColor = .darkGray
+                l.text = "Abilities"
+                l.font = UIFont.boldSystemFont(ofSize: 18)
+                l.textAlignment = .left
+                l.text = a.capitalized
+                abilityView.addArrangedSubview(l)
+            }
+
+            addSubview(abilityView)
+
+            addMyConstraints()
+
+            // Create Evolutions
+            if let evolution = pokemon.evolution, evolution.count > 1 {
+                labelForEvolution.text = "Evolutions: "
+                addSubview(labelForEvolution)
+                for e in evolution {
+                    print("evolution: ", e)
+                    createCardEvolution(for: e)
+                }
+
+                addSubview(evolutionContainer)
+                addConstraintsForEvolution()
+            }
+        }
+    }
+
     func addMyConstraints() {
         NSLayoutConstraint.activate([
             name.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 20),
@@ -279,7 +277,7 @@ extension PokemonView {
         }
 
         // Verificar, pois nem sempre a lista completa ta carregada
-        guard let pokemon = pokemonList.first(where: { $0.id == id }) else {
+        guard let pokemon = pokemon else {
             cardEvolutionView.img = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/\(id).png"
             return
         }

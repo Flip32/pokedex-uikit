@@ -2,6 +2,8 @@ import UIKit
 
 
 class HomeViewController: UIViewController {
+    var viewModel: ListViewModelProtocol
+
     var sortedList: String = "up"
 
     private let logo: UIImageView = {
@@ -81,12 +83,48 @@ class HomeViewController: UIViewController {
         return textField
     }()
 
+    init(viewModel: ListViewModelProtocol) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         configureView()
-        fetchPokemonDataInRange()
+        bindingViewModel()
+        showLoadingIndicator()
+        viewModel.requestPokemons()
     }
 
+    private func showLoadingIndicator() {
+        print("Ta chegando no show Loading Indicator")
+        view.addSubview(loadingIndicator)
+        loadingIndicator.startAnimating()
+    }
+
+    private func hideLoadingIndicator() {
+        print("No hide loading")
+        loadingIndicator.stopAnimating()
+        loadingIndicator.removeFromSuperview()
+    }
+
+    private func bindingViewModel() {
+        viewModel.listDidChange = { viewModel in
+            self.viewModel = viewModel
+            DispatchQueue.main.async { [weak self] in
+                self?.tableView.update(with: viewModel)
+                self?.hideLoadingIndicator()
+            }
+        }
+    }
+}
+
+// MARK: - UI Methods
+extension HomeViewController {
     private func configureView() {
         configureCustomView()
         configureTableView()
@@ -144,79 +182,29 @@ class HomeViewController: UIViewController {
             tableView.bottomAnchor.constraint(equalTo: customView.bottomAnchor, constant: -20)
         ])
     }
+}
 
-    private func showLoadingIndicator() {
-        view.addSubview(loadingIndicator)
-        loadingIndicator.startAnimating()
-    }
-
-    private func hideLoadingIndicator() {
-        loadingIndicator.stopAnimating()
-        loadingIndicator.removeFromSuperview()
-    }
-
-    // MARK: - Actions
-    private func fetchPokemonDataInRange() {
-        print("vai chamar a api")
-        showLoadingIndicator()
-        let service = PokemonService()
-        let dispatchGroup = DispatchGroup()
-
-        dispatchGroup.enter()
-//        let genIDs = [1, 2, 3, 4, 5]
-        service.getPokemonsCached(genIDs: []) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case let .failure(error):
-                    print("caiu no error")
-                    print(error)
-                case let .success(data):
-                    pokemonList = data.sorted(by: { $0.id < $1.id })
-                    pokemonListInitial = data.sorted(by: { $0.id < $1.id })
-                }
-                dispatchGroup.leave()
-            }
-        }
-
-        dispatchGroup.notify(queue: .main) { [weak self] in
-            self?.tableView.reloadData()
-            self?.hideLoadingIndicator()
-        }
-    }
-
-    // MARK: - Navigation
+// MARK: - Navigation
+extension HomeViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "goToPokemonController" {
             if let destinationVC = segue.destination as? PokemonController,
-               let pokemonId = sender as? Int {
-                destinationVC.pokemonId = pokemonId
+               let pokemon = sender as? Pokemon {
+                destinationVC.pokemon = pokemon
             }
         }
     }
+}
 
+// MARK: - Actions
+extension HomeViewController {
     @objc func sortPokemons() {
-        // comprar o sortedList, se for up, ordena do menor para o maior, se for down, ordena do maior para o menor
-        if sortedList == "up" {
-            pokemonList = pokemonList.sorted(by: { $0.id > $1.id })
-            sortedList = "down"
-        } else {
-            pokemonList = pokemonList.sorted(by: { $0.id < $1.id })
-            sortedList = "up"
-        }
-
-        tableView.reloadData()
+        viewModel.sortPokemons(sortDirection: sortedList)
+        sortedList = sortedList == "up" ? "down" : "up"
     }
 
     @objc private func textFieldDidChange(_ textField: UITextField) {
-        if let searchText = textField.text {
-            if searchText.isEmpty {
-                pokemonList = pokemonListInitial
-            } else {
-                pokemonList = pokemonListInitial.filter {
-                    $0.name.localizedCaseInsensitiveContains(searchText)
-                }
-            }
-            tableView.reloadData()
-        }
+        viewModel.findPokemon(textField: textField.text ?? "", sortDirection: sortedList)
+        tableView.reloadData()
     }
 }

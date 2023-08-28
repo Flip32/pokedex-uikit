@@ -3,7 +3,7 @@ import UIKit
 class PokemonController: UIViewController {
     private var customView: PokemonView? = nil
     
-    var pokemonId: Int?
+//    var pokemonId: Int?
     var pokemon: Pokemon?
 
     override func viewDidLoad() {
@@ -12,8 +12,8 @@ class PokemonController: UIViewController {
     }
     
     private func buildView() {
-        if let id = pokemonId {
-            let pokemonView = PokemonView(pokemonId: id)
+        if let pokemon = pokemon {
+            let pokemonView = PokemonView(pokemon: pokemon)
             view = pokemonView
             customView = pokemonView
         }

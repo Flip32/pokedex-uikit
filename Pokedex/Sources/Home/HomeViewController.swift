@@ -83,6 +83,17 @@ class HomeViewController: UIViewController {
         return textField
     }()
 
+    private var errorText: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Desculpe, estamos com problemas. Tente novamente mais tarde."
+        label.textColor = .white
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.font = UIFont.boldSystemFont(ofSize: 20)
+        return label
+    }()
+
     init(viewModel: ListViewModelProtocol) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -110,11 +121,25 @@ class HomeViewController: UIViewController {
         loadingIndicator.removeFromSuperview()
     }
 
+    private func showError(error: Bool) {
+        if error {
+            view.addSubview(errorText)
+            NSLayoutConstraint.activate([
+                errorText.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+                errorText.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+                errorText.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            ])
+        } else {
+            errorText.removeFromSuperview()
+        }
+    }
+
     private func bindingViewModel() {
         viewModel.listDidChange = { viewModel in
             self.viewModel = viewModel
             DispatchQueue.main.async { [weak self] in
                 self?.tableView.update(with: viewModel)
+                self?.showError(error: viewModel.error)
                 self?.hideLoadingIndicator()
             }
         }

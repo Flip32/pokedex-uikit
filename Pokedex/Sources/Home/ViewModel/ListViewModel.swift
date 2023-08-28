@@ -18,7 +18,7 @@ final class ListViewModel: ListViewModelProtocol {
         }
     }
 
-    var error: Bool? {
+    var error: Bool = false {
         didSet {
             // Updates
             self.listDidChange?(self)

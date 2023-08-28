@@ -9,6 +9,7 @@ protocol ListViewModelProtocol {
 
     var pokemonList: [Pokemon] { get }
     var pokemonListInitial: [Pokemon] { get }
+    var error: Bool { get }
 
     // Sort is a function that receives a string and returns nothing
     func sortPokemons(sortDirection: String)

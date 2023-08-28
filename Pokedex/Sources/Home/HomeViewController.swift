@@ -101,13 +101,11 @@ class HomeViewController: UIViewController {
     }
 
     private func showLoadingIndicator() {
-        print("Ta chegando no show Loading Indicator")
         view.addSubview(loadingIndicator)
         loadingIndicator.startAnimating()
     }
 
     private func hideLoadingIndicator() {
-        print("No hide loading")
         loadingIndicator.stopAnimating()
         loadingIndicator.removeFromSuperview()
     }

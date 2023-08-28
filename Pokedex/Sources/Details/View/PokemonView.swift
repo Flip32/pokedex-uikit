@@ -118,9 +118,7 @@ class PokemonView: UIView {
     init(pokemon: Pokemon?) {
         super.init(frame: .zero)
         backgroundColor = .black
-        configure()
-
-
+        configure(pokemon)
     }
 
     required init?(coder: NSCoder) {
@@ -131,7 +129,7 @@ class PokemonView: UIView {
 // MARK: - Config
 extension PokemonView {
 
-    func configure() {
+    func configure(_ pokemon: Pokemon?) {
         if let pokemon = pokemon {
             print(pokemon.name)
             print("imagem: ", pokemon.image)
